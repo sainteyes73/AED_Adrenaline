@@ -1,25 +1,17 @@
 var express = require('express'),
-    router = express.Router(),
-    mongoose = require('mongoose'),
-    location = mongoose.model('location');
+    router = express.Router();
 
 module.exports = function (app) {
   app.use('/', router);
 };
 
 router.get('/', function (req, res, next) {
-  location.find(function (err, items) {
-    if (err) {
-      return next(err);
-    } else {
-      res.render('index', {
-        title: 'AED 위치 리스트',
-        items: items
-      });
-    }
-  });
-});
 
+    res.render('index', {
+      title: 'AED 위치 리스트',
+    });
+});
+/*
 router.get('/add', function (req, res, next) {
   res.render('add', {
     title: 'AED 위치 추가'
@@ -65,7 +57,7 @@ router.post('/nearbyme', function (req, res, next) {
     }
   });
 });
-
+*/
 router.get('/keyboard', (req, res) => {
   var menu = {
       type: 'buttons',

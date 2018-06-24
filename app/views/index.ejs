@@ -4,176 +4,25 @@
     <p class="menu-label">
         AED 리스트
     </p>
-      <ul class="menu-list">
-        <%items.forEach(function (item){%>
-        <li><a href="#" location="<%=item.coords%>" title="<%=item.title%>" address="<%=item.address%>"><%=item.title%></a></li>
-        <%});%>
-     </ul>
   </aside>
         <div class="row">
         <div class="col-3"></div>
         <div class="col-9">
           <div class="" id="map" style="width: 100%; height: 650px;"></div>
         </div>
-    <button id="nearbyme" type="button" class="button is-primary">가장 가까운 AED</button>
 
 
-<script src="https://openapi.map.naver.com/openapi/v3/maps.js?clientId=88gWD20RtsxD8klxDmdI&submodules=geocoder" charset="utf-8"></script>
+<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=12ec7761cdcbdba51ef2a95cd771f87b"></script>
 
 <script type="text/javascript">
-var map = new naver.maps.Map("map", {
-    center: new naver.maps.LatLng(37.3595316, 127.1052133),
-    zoom: 10,
-    mapTypeControl: true
-});
+  var container = document.getElementById('map'); //지도를 담을 영역의 DOM 레퍼런스
+  var options = { //지도를 생성할 때 필요한 기본 옵션
+	   center: new daum.maps.LatLng(33.450701, 126.570667), //지도의 중심좌표.
+	   level: 3 //지도의 레벨(확대, 축소 정도)
+};
 
-var infowindow = new naver.maps.InfoWindow({
-    anchorSkew: true
-});
+  var map = new daum.maps.Map(container, options); //지도 생성 및 객체 리턴
 
-
-
-function defaultLocation() {
-  var marker = new naver.maps.Marker({ // 마커
-    position: map.center,
-    map: map
-  });
-  infowindow.setContent('<div class="notification is-primary">스타벅스 본점</div>');
-  infowindow.open(map, marker);
-}
-
-function searchAddressToCoordinate(address) {
-    naver.maps.Service.geocode({
-        address: address
-    }, function(status, response) {
-        if (status === naver.maps.Service.Status.ERROR) {
-            return alert('Something Wrong!');
-        }
-
-        var item = response.result.items[0],
-            addrType = item.isRoadAddress ? '[도로명 주소]' : '[지번 주소]',
-            point = new naver.maps.Point(item.point.x, item.point.y);
-      //      console.log(point);
-        infowindow.setContent([
-          '<form id="insertForm" method="post" style="width: 500px; line-height: 150%;">',
-          '<div class="field" style="padding: 10px;">',
-            '<h4>검색 주소: ' + response.result.userquery + '</h4>',
-            '<p>'+addrType+' '+item.address+'</p>',
-          '</div>',
-          '<div class="field has-addons" style="padding: 10px;">',
-            '<div class="control is-expanded">',
-              '<input type="hidden" name="address" value="'+item.address+'">',
-              '<input type="hidden" name="lat" value="'+point.x+'">',
-              '<input type="hidden" name="lng" value="'+point.y+'"><br/>',
-            '</div>',
-          '</div>',
-          '</form>'
-        ].join('\n'));
-        var marker = new naver.maps.Marker({
-          position: point,
-          map: map
-        });
-      //  map.setCenter(marker);
-        infowindow.open(map, marker);
-    });
-}
-function menuLocation(title, position) {
-  var coords = position.split(',');
-  var location = new naver.maps.LatLng(coords[1], coords[0]);
-  map.setCenter(location);  // 얻은 좌표를 지도의 중심으로 설정
-  var marker = new naver.maps.Marker({ // 마커
-    position: location,
-    map: map
-  });
-  infowindow.setContent('<div class="notification is-primary">'+title+'</div>');
-  infowindow.open(map, marker);
-}
-
-function userGeolocation(position) {
-  $.ajax({
-    url: '/nearbyme',
-    type: 'post',
-    data: {'lat': position.coords.latitude, 'lng': position.coords.longitude}, // 내 위치 좌표
-    success: function (data) {
-      if (data.result) {
-        var location = new naver.maps.LatLng(data.item.coords[1], data.item.coords[0]);
-        map.setCenter(location);
-        var marker = new naver.maps.Marker({
-          position: location,
-          map: map
-        });
-        infowindow.setContent('<div class="notification is-info">가장 가까운 지점은 '+data.item.title+' 입니다.<br/>'+data.item.address+'</div>');
-        infowindow.open(map, marker);
-      }
-    },
-    error: function (request, status, error) {
-      console.log("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
-    }
-  });
-}
-
-function geolocationErr(error) { // 에러 처리
-  alert(error.message);
-}
-
-$(document).ready(function() {
-  // default
-
-  defaultLocation();
-  // menu 클릭 시
-  //console.log(item.address);
-
-  $('.menu-list li a').each(function(e){
-  //
-  //  e.preventDefault();
-    var location = $(this).attr('location');
-    var title = $(this).attr('title');
-    //var addr = $(this).attr('address');
-    menuLocation(title, location);
-    //searchAddressToCoordinate(addr);
-});
-
-/*
-  $('.menu-list li a').each(function (e) {
-    //e.preventDefault();
-    var location = $(this).attr('location');
-    var title = $(this).attr('title');
-    var addr = $(this).attr('address');
-    //menuLocation(title, location);
-    searchAddressToCoordinate(addr);
-  });
-*/
-  // 위치 정보
-  $('#nearbyme').click( function (e) {
-    e.preventDefault();
-    if (navigator.geolocation) {
-      var options = {
-        enableHighAccuracy: true, // 최대한 정확도를 높게 받을 것인지의 불리언 값
-        timeout: Infinity, // 위치 값을 장치로부터 받을 때까지의 대기할 시간 기본값은 Infinity
-        maximumAge: 0 // 캐시된 위치 값을 반환 받아도 되는 최대한의 시간, 0은 캐시된 위치 값 사용 X
-      };
-      navigator.geolocation.watchPosition(userGeolocation, geolocationErr, options); // 현재 위치 (위차가 바뀌면 갱신)
-    } else {
-      alert('지원 안되는 브라우저 입니다..');
-    }
-  });
-  map.addListener('click', function(e) {
-    searchCoordinateToAddress(e.coord);
-  });
-
-  $('#searchaddress').on('keydown', function(e) {
-    var keyCode = e.which;
-    if (keyCode === 13) { // Enter Key
-        searchAddressToCoordinate($('#searchaddress').val());
-    }
-  });
-
-  $('#submit').on('click', function(e) {
-    e.preventDefault();
-    searchAddressToCoordinate($('#searchaddress').val());
-  });
-
-});
 
 </script>
 <% include footer %>

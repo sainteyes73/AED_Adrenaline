@@ -2,14 +2,12 @@
 
 var express = require('express'),
   config = require('./config/config'),
-  glob = require('glob'),
-  mongoose = require('mongoose');
+  glob = require('glob');
 var favicon = require('serve-favicon');
 var path = require('path');
 var app = express();
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-  mongoose.Promise = global.Promise;
   /*
   var mongoDB = mongoose.connect(config.db, {
     useMongoClient: true
@@ -21,8 +19,7 @@ var bodyParser = require('body-parser');
   //const connStr = 'mongodb://localhost/mjdb4';
   // 아래는 mLab을 사용하는 경우의 예: 본인의 접속 String으로 바꾸세요.
   // const connStr = 'mongodb://dbuser1:mju12345@ds113825.mlab.com:13825/sampledb1';
-  mongoose.connect(connStr, {useMongoClient: true });
-  mongoose.connection.on('error', console.error);
+
   app.use(bodyParser.json());
   app.use(bodyParser.urlencoded({ extended: false }));
 
@@ -36,11 +33,12 @@ var bodyParser = require('body-parser');
       console.log('error while trying to connect with mongodb');
     });
 */
+/*
 var models = glob.sync(config.root + '/app/models/*.js');
 models.forEach(function (model) {
   require(model);
 });
-
+*/
 app.listen(config.port, function () {
   console.log('Express server listening on port ' + config.port);
 });

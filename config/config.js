@@ -8,8 +8,7 @@ var config = {
     app: {
       name: 'geolocation'
     },
-    port: process.env.PORT || 3000,
-    db: 'mongodb://localhost:27017/geolocation'
+    port: process.env.PORT || 3000
   },
 
   test: {
@@ -17,8 +16,8 @@ var config = {
     app: {
       name: 'geolocation'
     },
-    port: process.env.PORT || 3000,
-    db: 'mongodb://localhost/geolocation-test'
+    port: process.env.PORT || 3000
+
   },
 
   production: {
@@ -26,8 +25,7 @@ var config = {
     app: {
       name: 'geolocation'
     },
-    port: process.env.PORT || 3000,
-    db: 'mongodb://localhost/geolocation-production'
+    port: process.env.PORT || 3000
   }
 };
 

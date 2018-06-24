@@ -1,6 +1,5 @@
 // Example model
-var mongoose = require('mongoose'),
-    Schema = mongoose.Schema;
+/*
 
 var locationSchema = new Schema({
   title: String,
@@ -16,3 +15,4 @@ var locationSchema = new Schema({
 });
 
 mongoose.model('location', locationSchema);
+*/
