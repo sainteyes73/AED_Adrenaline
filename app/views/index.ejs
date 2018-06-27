@@ -5,35 +5,71 @@
         AED 리스트
     </p>
   </aside>
-    <div class="" id="map" style="width: 100%; height: 650px;"></div>
+     <div class="" id="map" style="width: 100%; height: 650px;"></div>
 
 
-<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=12ec7761cdcbdba51ef2a95cd771f87b"></script>
-
+<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=8a946d5de2f30f417d4252aa4cef341e"></script>
 <script type="text/javascript">
-function getLocation() {
-if (navigator.geolocation) { // GPS를 지원하면
-  navigator.geolocation.getCurrentPosition(function(position) {
-    alert(position.coords.latitude + ' ' + position.coords.longitude);
-    var container = document.getElementById('map'); //지도를 담을 영역의 DOM 레퍼런스
-    var options = { //지도를 생성할 때 필요한 기본 옵션
-       center: new daum.maps.LatLng(33.450701, 126.570667), //지도의 중심좌표.
-       level: 3 //지도의 레벨(확대, 축소 정도)
-  };
+$(document).ready(function() {
+  console.log("ok");
+  getLocation();
+});
 
-    var map = new daum.maps.Map(container, options); //지도 생성 및 객체 리턴
-  }, function(error) {
-    console.error(error);
-  }, {
-    enableHighAccuracy: false,
-    maximumAge: 0,
-    timeout: Infinity
-  });
-} else {
-  alert('GPS를 지원하지 않습니다');
+
+
+function getLocation() {
+
+  if (navigator.geolocation) { // GPS를 지원하면
+    var url='http://apis.data.go.kr/B552657/AEDInfoInqireService/getAedLcinfoInqire';
+    var queryParams='?'+encodeURIComponent('ServiceKey')+'='+'gJ%2FGBmwaviWrn8ZSx0eOt745BOy5J51ZReBd%2F44r73veUNOjqE0vgQhfleuV7WuU5%2Bos3IuLV5tivlhQ99eO1A%3D%3D';
+    navigator.geolocation.getCurrentPosition(function(position) {
+    //  alert(position.coords.latitude + ' ' + position.coords.longitude);
+      var container = document.getElementById('map'); //지도를 담을 영역의 DOM 레퍼런스
+      var options = { //지도를 생성할 때 필요한 기본 옵션
+        center: new daum.maps.LatLng(position.coords.latitude, position.coords.longitude), //지도의 중심좌표.
+        level: 5 //지도의 레벨(확대, 축소 정도)
+      };
+      var map = new daum.maps.Map(container, options); //지도 생성 및 객체 리턴
+      queryParams+='&'+encodeURIComponent('WGS84_LON')+'='+position.coords.longitude+'&'+encodeURIComponent('WGS84_LAT')+'='+position.coords.latitude;
+      queryParams+='&'+encodeURIComponent('pageNo')+'='+'1';
+      queryParams+='&'+encodeURIComponent("numberOfRows")+'='+'1';
+      console.log(url+queryParams);
+      $.ajax({
+         url : url+queryParams,
+         type: 'get',
+         success : function(result) {
+          $(result).find("item").each(function(){
+            var lat=$(this).find("wgs84Lat").text();
+            var lon=$(this).find("wgs84Lon").text();
+
+            var markerPosition  = new daum.maps.LatLng(lat, lon);
+            // 마커를 생성합니다
+            var marker = new daum.maps.Marker({
+                map: map, // 마커를 표시할 지도
+                position: markerPosition // 마커를 표시할 위치
+
+              });
+
+          });
+
+
+
+         }
+      });
+
+    }, function(error) {
+      console.error(error);
+    }, {
+      enableHighAccuracy: false,
+      maximumAge: 0,
+      timeout: Infinity
+    });
+
+  } else {
+  alert('이 브라우저는 GPS를 지원하지 않습니다');
+  }
 }
-}
-getLocation();
+
 
 
 </script>

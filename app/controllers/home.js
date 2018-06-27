@@ -6,7 +6,6 @@ module.exports = function (app) {
 };
 
 router.get('/', function (req, res, next) {
-
     res.render('index', {
       title: 'AED 위치 리스트',
     });
