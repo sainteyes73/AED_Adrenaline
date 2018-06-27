@@ -15,12 +15,9 @@ $(document).ready(function() {
   //getLocation();
   tryGeolocation();
 });
-
-
 var apiGeolocationSuccess = function(position) {
     alert("API geolocation success!\n\nlat = " + position.coords.latitude + "\nlng = " + position.coords.longitude);
 };
-
 var tryAPIGeolocation = function() {
     jQuery.post( "https://www.googleapis.com/geolocation/v1/geolocate?key=AIzaSyDCa1LUe1vOczX1hO_iGYgyo8p_jYuGOPU", function(success) {
         apiGeolocationSuccess({coords: {latitude: success.location.lat, longitude: success.location.lng}});
@@ -29,7 +26,6 @@ var tryAPIGeolocation = function() {
         alert("API Geolocation error! \n\n"+err);
     });
 };
-
 var browserGeolocationSuccess = function(position) {
     //alert("Browser geolocation success!\n\nlat = " + position.coords.latitude + "\nlng = " + position.coords.longitude);
     var url='http://apis.data.go.kr/B552657/AEDInfoInqireService/getAedLcinfoInqire';
@@ -52,25 +48,41 @@ var browserGeolocationSuccess = function(position) {
           $(result).find("item").each(function(){
             var lat=$(this).find("wgs84Lat").text();
             var lon=$(this).find("wgs84Lon").text();
-
             var markerPosition  = new daum.maps.LatLng(lat, lon);
             // 마커를 생성합니다
             var marker = new daum.maps.Marker({
                 map: map, // 마커를 표시할 지도
                 position: markerPosition // 마커를 표시할 위치
-
               });
-
-          });
-
+            var content='<a href="">Button</a>' 
 
 
-         }
-      });
+            var infowindow = new daum.maps.InfoWindow({
+                content: content, // 인포윈도우에 표시할 내용
+                removable : true
+            });
 
- 
+    // 마커에 mouseover 이벤트와 mouseout 이벤트를 등록합니다
+    // 이벤트 리스너로는 클로저를 만들어 등록합니다
+    // for문에서 클로저를 만들어 주지 않으면 마지막 마커에만 이벤트가 등록됩니다
+            daum.maps.event.addListener(marker, 'click', makeOverListener(map, marker, infowindow));
+        });
+    }
+  });
+
 };
+function makeOverListener(map, marker, infowindow) {
+    return function() {
+        infowindow.open(map, marker);
+    };
+}
 
+// 인포윈도우를 닫는 클로저를 만드는 함수입니다
+function makeOutListener(infowindow) {
+    return function() {
+        infowindow.close();
+    };
+}
 var browserGeolocationFail = function(error) {
     switch (error.code) {
         case error.TIMEOUT:
@@ -86,7 +98,6 @@ var browserGeolocationFail = function(error) {
             break;
     }
 };
-
 var tryGeolocation = function() {
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
@@ -95,11 +106,5 @@ var tryGeolocation = function() {
                 {maximumAge: 50000, timeout: 20000, enableHighAccuracy: true});
     }
 };
-
-
-
-
-
-
 </script>
 <% include footer %>
