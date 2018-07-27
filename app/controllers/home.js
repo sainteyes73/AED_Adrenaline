@@ -83,7 +83,7 @@ router.post('/message', (req,res) =>{
       "text": "아래 버튼을 눌러 현재 위치와 가장 가까운 AED를 알아내세요.",
       "message_button": {
         "label": "현 위치에서 가장 가까운 AED",
-        "url": "https://aedrenaline-eojin.c9users.io"
+        "url": "https://c71a628de3f64770b04a49d4ffde88ab.vfs.cloud9.us-east-1.amazonaws.com/"
       }
     },
     "keyboard": {
