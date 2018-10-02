@@ -46,8 +46,8 @@ router.post('/nearbyme', function (req, res, next) {
   var url='http://apis.data.go.kr/B552657/AEDInfoInqireService/getAedLcinfoInqire';
   var queryParams='?'+encodeURIComponent('ServiceKey')+'='+'gJ%2FGBmwaviWrn8ZSx0eOt745BOy5J51ZReBd%2F44r73veUNOjqE0vgQhfleuV7WuU5%2Bos3IuLV5tivlhQ99eO1A%3D%3D';
   queryParams+='&'+encodeURIComponent('WGS84_LON')+'='+req.body.lng+'&'+encodeURIComponent('WGS84_LAT')+'='+req.body.lat;
-  queryParams+='&'+encodeURIComponent('pageNo')+'='+'1';
-  queryParams+='&'+encodeURIComponent("numberOfRows")+'='+'1';
+  queryParams+='&'+encodeURIComponent('pageNo')+'='+'100';
+  queryParams+='&'+encodeURIComponent("numberOfRows")+'='+'100';
   request({
     url: url + queryParams,
     method: 'GET',
