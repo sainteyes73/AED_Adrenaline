@@ -44,7 +44,7 @@ function makeOutListener(infowindow) {
     };
 }
 function getLocation() {
- 
+
 }
 function userGeolocation(position,map) {
   $.ajax({
@@ -58,6 +58,7 @@ function userGeolocation(position,map) {
         //console.log(data.item);
         var myItem = JSON.parse(data.item);
         var want= myItem.response.body.items.item;
+        console.log(want);
         for(var i=0; i<want.length; i++){
             var output = '';
             console.log(want[i]);
@@ -69,21 +70,21 @@ function userGeolocation(position,map) {
                 map: map, // 마커를 표시할 지도
                 position: markerPosition // 마커를 표시할 위치
               });
-            var content = '<div class="wrap">' + 
-                   '    <div class="info">' + 
-                     '        <div class="title">' + 
-                         want[i].buildPlace._text  + 
-            '            <div class="close" onclick="closeOverlay()" title="닫기"></div>' + 
-            '        </div>' + 
-            '        <div class="body">' + 
-            '           </div>' + 
-            '            <div class="desc">' + 
-            '                <div class="ellipsis">'+ want[i].buildAddress._text +'</div>' + 
-            '                <div class="jibun ellipsis">(관리자)'+ want[i].manager._text+'(전화번호)'+want[i].managerTel._text+'</div>' + 
-            '                <div><a href="	http://map.daum.net/link/to/목적지,'+want[i].wgs84Lat._text+','+want[i].wgs84Lon._text+'"target="_blank" class="link">길찾기</a></div>' + 
-            '            </div>' + 
-            '        </div>' + 
-            '    </div>' +    
+            var content = '<div class="wrap">' +
+                   '    <div class="info">' +
+                     '        <div class="title">' +
+                         want[i].buildPlace._text  +
+            '            <div class="close" onclick="closeOverlay()" title="닫기"></div>' +
+            '        </div>' +
+            '        <div class="body">' +
+            '           </div>' +
+            '            <div class="desc">' +
+            '                <div class="ellipsis">'+ want[i].buildAddress._text +'</div>' +
+            '                <div class="jibun ellipsis">(관리자)'+ want[i].manager._text+'(전화번호)'+want[i].managerTel._text+'</div>' +
+            '                <div><a href="	http://map.daum.net/link/to/목적지,'+want[i].wgs84Lat._text+','+want[i].wgs84Lon._text+'"target="_blank" class="link">길찾기</a></div>' +
+            '            </div>' +
+            '        </div>' +
+            '    </div>' +
             '</div>';
 
             var infowindow = new daum.maps.InfoWindow({
@@ -113,15 +114,15 @@ function makeOutListener(infowindow) {
 function position_move(){
   if (navigator.geolocation) { // GPS를 지원하면
     navigator.geolocation.getCurrentPosition(function(position) {
-      
+
       var container = document.getElementById('map'); //지도를 담을 영역의 DOM 레퍼런스
       var options = { //지도를 생성할 때 필요한 기본 옵션
         center: new daum.maps.LatLng(position.coords.latitude, position.coords.longitude), //지도의 중심좌표.
         level: 5 //지도의 레벨(확대, 축소 정도)
       };
       map = new daum.maps.Map(container, options); //지도 생성 및 객체 리턴
-      
-      var imageSrc = 'http://t1.daumcdn.net/localimg/localimages/07/mapapidoc/marker_red.png', // 마커이미지의 주소입니다    
+
+      var imageSrc = 'http://t1.daumcdn.net/localimg/localimages/07/mapapidoc/marker_red.png', // 마커이미지의 주소입니다
       imageSize = new daum.maps.Size(32, 34), // 마커이미지의 크기입니다
       imageOption = {offset: new daum.maps.Point(27,69)}; // 마커이미지의 옵션입니다. 마커의 좌표와 일치시킬 이미지 안에서의 좌표를 설정합니다.
       markerImage = new daum.maps.MarkerImage(imageSrc, imageSize, imageOption);
@@ -129,10 +130,10 @@ function position_move(){
 
 // 마커를 생성합니다
       var marker = new daum.maps.Marker({
-          position: markerPosition, 
-          image: markerImage // 마커이미지 설정 
+          position: markerPosition,
+          image: markerImage // 마커이미지 설정
       });
-      marker.setMap(map);  
+      marker.setMap(map);
       userGeolocation(position,map);
     }, function(error) {
       console.error(error);
